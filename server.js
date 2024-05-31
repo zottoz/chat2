@@ -41,8 +41,12 @@ server.on('connection', ws => {
 
     });
 
+    // Manipulador para erros
+    ws.on('error', (error) => {
+        console.error('Cliente ERRO:', error);
+    });
 
-  });
+  }); //fim
 
 
   //Quando a conexao com o cliente é fechada
@@ -52,3 +56,9 @@ server.on('connection', ws => {
 
 });
 
+// Manipulador para erros do servidor WebSocket
+server.on('error', (error) => {
+  console.error('Erro no Servidor:', error);
+});
+
+console.log('WebSocket server is running on ws://localhost:3001');
