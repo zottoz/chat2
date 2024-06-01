@@ -1,13 +1,25 @@
 const WebSocket = require('ws');
+const express = require('express'); // Usar express apenas para middleware CORS
+const cors = require('cors');
+const http = require('http');
 const { v4: uuidv4 } = require('uuid');
 
-const server = new WebSocket.Server({ port: 3001 });
+//const server = new WebSocket.Server({ port: 3001 });
+
+const app = express();
+
+// Middleware CORS
+app.use(cors());
+
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
 
 let clients = [];
 
 let mensagemCompleta = [];
 
-server.on('connection', ws => {
+wss.on('connection', ws => {
   
   let clientId = uuidv4();
 
@@ -27,7 +39,7 @@ server.on('connection', ws => {
 
 
     //envia msg para todos
-    server.clients.forEach(client => {
+    wss.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
           // cria uma nova mensagem
           mensagemCompleta =[
@@ -61,4 +73,9 @@ server.on('error', (error) => {
   console.error('Erro no Servidor:', error);
 });
 
-console.log('WebSocket server is running on ws://localhost:3001');
+// Iniciar o servidor
+const PORT = 3001;
+server.listen(PORT, () => {
+  console.log(`Servidor WebSocket rodando em http://localhost:${PORT}`);
+});
+
