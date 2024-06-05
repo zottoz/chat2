@@ -1,6 +1,7 @@
-const ws1 = new WebSocket('http://34.229.193.74:3001/');
+const ws1 = new WebSocket('http://localhost:3001/');
 
 let meuID ;
+let teste=0; // um teste
   
 ws1.addEventListener('message', function (event) {
     atualizaChat(event.data);
